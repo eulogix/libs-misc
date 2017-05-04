@@ -18,6 +18,7 @@
     "autoload": {
         "psr-4": {
             "Eulogix\\Lib\\": "src/Eulogix/Lib/"
-        }
+        },
+        "files": ["src/Eulogix/Lib/functions.php"]
     }
 }
