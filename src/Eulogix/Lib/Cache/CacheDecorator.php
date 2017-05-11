@@ -30,11 +30,6 @@ class CacheDecorator {
     /**
      * @var array
      */
-    private $methods;
-
-    /**
-     * @var array
-     */
     private $localCache = [];
 
     /**
@@ -51,15 +46,6 @@ class CacheDecorator {
         $this->instance = $instance;
         $this->cacher = $cacher;
         $this->cacheNamespace = $cacheNamespace;
-    }
-
-    /**
-     * @param string $method
-     * @param int $timeToLive
-     */
-    public function defineCachingForMethod($method, $timeToLive)
-    {
-        $this->methods[$method] = $timeToLive;
     }
 
     public function __call($method, $args)

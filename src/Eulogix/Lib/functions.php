@@ -180,3 +180,18 @@ function castToClass($class, $object)
     $ret = unserialize($modSer);
     return $ret;
 }
+
+
+/**
+ * @param array $arrayToCopy
+ * @return array
+ */
+function array_copy($arrayToCopy) {
+    $copy = [];
+    foreach($arrayToCopy as $key => $value) {
+        if(is_array($value)) $copy[$key] = array_copy($value);
+        else if(is_object($value)) $copy[$key] = clone $value;
+        else $copy[$key] = $value;
+    }
+    return $copy;
+}

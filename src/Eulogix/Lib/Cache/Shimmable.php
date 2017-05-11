@@ -12,7 +12,6 @@
 namespace Eulogix\Lib\Cache;
 
 /**
- * dummy implementation that only caches stuff for a single request
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
