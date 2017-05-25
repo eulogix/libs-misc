@@ -24,7 +24,8 @@ class DummyCacher implements CacherInterface
      * @inheritdoc
      */
     function tokenize($variable) {
-        return md5(serialize($variable));
+        //json_encode is faster than serialize (!)
+        return md5(json_encode($variable));
     }
 
     /**
