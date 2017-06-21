@@ -195,3 +195,26 @@ function array_copy($arrayToCopy) {
     }
     return $copy;
 }
+
+/**
+ * @param $phpCode
+ * @param array $context
+ * @return mixed
+ */
+function evaluate_in_lambda($phpCode, array $context=[], $asExpression = false) {
+
+    $variables = array_keys($context);
+    $functionPlaceHolders = array_map(function($var) { return '$'.$var; }, $variables);
+    $functionParameters = array_map(function($var) { return "\$context['$var']"; }, $variables);
+
+    $ret_ = null;
+
+    $finalCode = "\$lambda_ = function(".implode(', ',$functionPlaceHolders).") { ".
+        ($asExpression ? "return {$phpCode};" : $phpCode)
+    ."};
+    \$ret_ = \$lambda_(".implode(', ',$functionParameters)."); ";
+
+    eval($finalCode);
+
+    return $ret_;
+}
