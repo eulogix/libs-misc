@@ -22,7 +22,7 @@ class ConstraintBuilder {
     public static function Blank_() { return array('constraint'=>'Blank'); }
     public static function Callback_() { return array('constraint'=>'Callback'); }
     public static function CardScheme_() { return array('constraint'=>'CardScheme'); }
-    public static function Choice_() { return array('constraint'=>'Choice'); }
+    public static function Choice_($choices) { return array('constraint'=>'Choice', 'args'=>['choices'=>$choices]); }
     public static function Collection_() { return array('constraint'=>'Collection'); }
     public static function Count_($min=null, $max=null) { return array('constraint'=>'Count', 'args'=>['min'=>$min, 'max'=>$max], 'messages'=>['minMessage', 'maxMessage', 'exactMessage']); }
     public static function Country_() { return array('constraint'=>'Country'); }
@@ -58,13 +58,16 @@ class ConstraintBuilder {
     public static function Null_() { return array('constraint'=>'IsNull'); }
     public static function Optional_() { return array('constraint'=>'Optional'); }
     public static function Range_() { return array('constraint'=>'Range'); }
-    public static function Regex_() { return array('constraint'=>'Regex'); }
+    public static function Regex_($pattern) { return array('constraint'=>'Regex', 'args'=>['pattern'=>$pattern]); }
     public static function Required_() { return array('constraint'=>'Required'); }
     public static function Time_() { return array('constraint'=>'Time'); }
     public static function True_() { return array('constraint'=>'True'); }
     public static function Type_() { return array('constraint'=>'Type'); }
     public static function Url_() { return array('constraint'=>'Url'); }
     public static function Valid_() { return array('constraint'=>'Valid'); }
+
+    public static function In_($choices) { return array('constraint'=>'Choice', 'args'=>['choices'=>$choices]); }
+    public static function NotIn_($choices) { return self::_NOT(self::In_($choices)); }
 
 
     public static function _ALL() {
@@ -81,6 +84,10 @@ class ConstraintBuilder {
             $c[] = func_get_arg($i);
         }
         return array('operator'=>'or', 'constraints'=>$c);
+    }
+
+    public static function _NOT($constraint) {
+        return array('operator'=>'not', 'constraints'=>[$constraint]);
     }
 
 }

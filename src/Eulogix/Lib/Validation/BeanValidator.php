@@ -101,9 +101,9 @@ class BeanValidator implements BeanValidatorInterface
         $returnList = new sfConstraintViolationList();
 
         foreach($constraints as $c) {
-            $cList = new sfConstraintViolationList();
+            $violationList = new sfConstraintViolationList();
             if(isset($c['operator'])) {
-                $cList = $this->doValidateField($value, $c['operator'], $c['constraints']);
+                $violationList = $this->doValidateField($value, $c['operator'], $c['constraints']);
             } else {
 
                 $args=null;
@@ -121,21 +121,28 @@ class BeanValidator implements BeanValidatorInterface
                             $sfConstraint->$message = 'FAIL '.$c['constraint'];
                     } else $sfConstraint->message = 'FAIL '.$c['constraint'];
 
-                    $cList = $this->validator->validate($value, $sfConstraint);
+                    $violationList = $this->validator->validate($value, $sfConstraint);
                 } else {
-                    $cList->add( new sfConstraintViolation(null, "class not found {{class}}", ["class"=>$c['constraint']], null, null, null) );
+                    $violationList->add( new sfConstraintViolation(null, "class not found {{class}}", ["class"=>$c['constraint']], null, null, null) );
                 }
             }
 
             switch($operator) {
                 case 'or'  : {
-                    if($cList->count()==0) {
-                        return $cList;
+                    if($violationList->count()==0) {
+                        return $violationList;
+                    }
+                    break;
+                }
+                case 'not'  : {
+                    if($violationList->count()==0) {
+                        $violationList->add( new sfConstraintViolation("FAIL NOT ".@$c['constraint'], "FAIL {{class}}", ["class"=>$c['constraint']], null, null, null) );
+                        return $violationList;
                     }
                     break;
                 }
                 case 'and' : {
-                    $returnList->addAll( $cList );
+                    $returnList->addAll( $violationList );
                     break;
                 }
             }
