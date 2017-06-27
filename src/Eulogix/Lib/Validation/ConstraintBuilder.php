@@ -22,20 +22,20 @@ class ConstraintBuilder {
     public static function Blank_() { return array('constraint'=>'Blank'); }
     public static function Callback_() { return array('constraint'=>'Callback'); }
     public static function CardScheme_() { return array('constraint'=>'CardScheme'); }
-    public static function Choice_($choices) { return array('constraint'=>'Choice', 'args'=>['choices'=>$choices]); }
+    public static function Choice_($choices, $message=null) { return array('constraint'=>'Choice', 'args'=>['choices'=>$choices], 'message'=>$message); }
     public static function Collection_() { return array('constraint'=>'Collection'); }
-    public static function Count_($min=null, $max=null) { return array('constraint'=>'Count', 'args'=>['min'=>$min, 'max'=>$max], 'messages'=>['minMessage', 'maxMessage', 'exactMessage']); }
+    public static function Count_($min=null, $max=null) { return array('constraint'=>'Count', 'args'=>['min'=>$min, 'max'=>$max]); }
     public static function Country_() { return array('constraint'=>'Country'); }
     public static function Currency_() { return array('constraint'=>'Currency'); }
     public static function Date_() { return array('constraint'=>'Date'); }
     public static function DateTime_() { return array('constraint'=>'DateTime'); }
     public static function Email_() { return array('constraint'=>'Email'); }
-    public static function EqualTo_($v) { return array('constraint'=>'EqualTo', 'arg'=>$v); }
+    public static function EqualTo_($v, $message=null) { return array('constraint'=>'EqualTo', 'arg'=>$v, 'message'=>$message); }
     public static function Existence_() { return array('constraint'=>'Existence'); }
     public static function Expression_() { return array('constraint'=>'Expression'); }
     public static function False_() { return array('constraint'=>'False'); }
     public static function File_() { return array('constraint'=>'File'); }
-    public static function GreaterThan_($v) { return array('constraint'=>'GreaterThan', 'arg'=>$v); }
+    public static function GreaterThan_($v, $message=null) { return array('constraint'=>'GreaterThan', 'arg'=>$v, 'message'=>$message); }
     public static function GreaterThanOrEqual_() { return array('constraint'=>'GreaterThanOrEqual'); }
     public static function GroupSequence_() { return array('constraint'=>'GroupSequence'); }
     public static function GroupSequenceProvider_() { return array('constraint'=>'GroupSequenceProvider'); }
@@ -51,14 +51,14 @@ class ConstraintBuilder {
     public static function LessThanOrEqual_() { return array('constraint'=>'LessThanOrEqual'); }
     public static function Locale_() { return array('constraint'=>'Locale'); }
     public static function Luhn_() { return array('constraint'=>'Luhn'); }
-    public static function NotBlank_() { return array('constraint'=>'NotBlank'); }
-    public static function NotEqualTo_($v) { return array('constraint'=>'NotEqualTo', 'arg'=>$v); }
+    public static function NotBlank_($message=null) { return array('constraint'=>'NotBlank', 'message'=>$message); }
+    public static function NotEqualTo_($v, $message=null) { return array('constraint'=>'NotEqualTo', 'arg'=>$v, 'message'=>$message); }
     public static function NotIdenticalTo_() { return array('constraint'=>'NotIdenticalTo'); }
-    public static function NotNull_() { return array('constraint'=>'NotNull'); }
+    public static function NotNull_($message=null) { return array('constraint'=>'NotNull', 'message'=>$message); }
     public static function Null_() { return array('constraint'=>'IsNull'); }
     public static function Optional_() { return array('constraint'=>'Optional'); }
     public static function Range_() { return array('constraint'=>'Range'); }
-    public static function Regex_($pattern) { return array('constraint'=>'Regex', 'args'=>['pattern'=>$pattern]); }
+    public static function Regex_($pattern, $message=null) { return array('constraint'=>'Regex', 'args'=>['pattern'=>$pattern], 'message'=>$message); }
     public static function Required_() { return array('constraint'=>'Required'); }
     public static function Time_() { return array('constraint'=>'Time'); }
     public static function True_() { return array('constraint'=>'True'); }
@@ -66,7 +66,7 @@ class ConstraintBuilder {
     public static function Url_() { return array('constraint'=>'Url'); }
     public static function Valid_() { return array('constraint'=>'Valid'); }
 
-    public static function In_($choices) { return array('constraint'=>'Choice', 'args'=>['choices'=>$choices]); }
+    public static function In_($choices, $message=null) { return array('constraint'=>'Choice', 'args'=>['choices'=>$choices], 'message'=>$message); }
     public static function NotIn_($choices) { return self::_NOT(self::In_($choices)); }
 
 

@@ -117,9 +117,9 @@ class BeanValidator implements BeanValidatorInterface
                 if( $sfConstraint = $this->sfConstraintFactory($c['constraint'], $args) ) {
 
                     if(isset($c['messages'])) {
-                        foreach($c['messages'] as $message)
-                            $sfConstraint->$message = 'FAIL '.$c['constraint'];
-                    } else $sfConstraint->message = 'FAIL '.$c['constraint'];
+                        foreach($c['messages'] as $messageKey => $message)
+                            $sfConstraint->$messageKey = $message;
+                    } elseif(isset($c['message'])) $sfConstraint->message = $c['message'];
 
                     $violationList = $this->validator->validate($value, $sfConstraint);
                 } else {
