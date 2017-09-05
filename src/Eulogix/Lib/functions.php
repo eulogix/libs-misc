@@ -204,7 +204,7 @@ function array_copy($arrayToCopy) {
 function evaluate_in_lambda($phpCode, array $context=[], $asExpression = false) {
 
     $variables = array_keys($context);
-    $functionPlaceHolders = array_map(function($var) { return '$'.$var; }, $variables);
+    $functionPlaceHolders = array_map(function($var) { return '$'.preg_replace('/[^a-z0-9_]/sim','',$var); }, $variables);
     $functionParameters = array_map(function($var) { return "\$context['$var']"; }, $variables);
 
     $ret_ = null;
