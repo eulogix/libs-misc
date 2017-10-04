@@ -13,6 +13,7 @@
     "require": {
         "php": ">=5.3.9",
         "symfony/validator": "~2.8",
+        "symfony/event-dispatcher": "~2.8",
         "yohang/finite": "1.1.*@dev"
     },
     "autoload": {
