@@ -81,7 +81,14 @@ class MemcachedCacher implements CacherInterface
         $this->purgeLocalCache();
         if(isset($this->localCache[ $key ]))
             return $this->localCache[ $key ];
-        return $this->localCache[ $key ] = $this->memcached->get($key);
+
+        $item = $this->memcached->get($key);
+        if( $this->memcached->getResultCode() == \Memcached::RES_SUCCESS) {
+            $this->localCache[ $key ] = $item;
+            return $item;
+        }
+        
+        return false;
     }
 
     /**
