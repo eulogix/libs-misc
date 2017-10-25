@@ -119,6 +119,24 @@ function array_filter_allowed_keys_table($array, $allowedKeys) {
 }
 
 /**
+ * @param array $array1
+ * @param array $array2
+ * @return array
+ */
+function array_merge_recursive_distinct(array &$array1, array &$array2)
+{
+    $merged = $array1;
+
+    foreach ($array2 as $key => &$value)
+        if (is_array($value) && isset ( $merged [ $key ] ) && is_array($merged [ $key ]))
+            $merged [ $key ] = array_merge_recursive_distinct($merged [ $key ], $value);
+        else
+            $merged [ $key ] = $value;
+
+    return $merged;
+}
+
+/**
  * xml2array that always normalizes children to arrays so that even if there is 1 element, an array is returned
  * @param SimpleXMLElement $xml
  * @return array|mixed
