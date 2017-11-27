@@ -18,6 +18,7 @@ use PDO;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class NotificationListener
 {
@@ -97,7 +98,7 @@ class NotificationListener
         return $this->dispatcher;
     }
 
-    public function listen()
+    public function listen($minutes=null)
     {
         $channels = $this->getRegisteredChannels();
         foreach($channels as $channel)
@@ -105,8 +106,11 @@ class NotificationListener
 
         $this->dispatcher->dispatch(self::EVENT_LISTENING_STARTED);
 
+        $sw = new Stopwatch();
+        $sw->start('loop');
+
         $notificationCounter = 0;
-        while ( true ) {
+        while ( !$minutes || ($sw->getEvent('loop')->getDuration()/1000/60 < $minutes) ) {
             if ( $result = $this->connection->pgsqlGetNotify(PDO::FETCH_ASSOC, 1000) ) {
 
                 $this->dispatcher->dispatch(self::EVENT_NOTIFICATION_RECEIVED,

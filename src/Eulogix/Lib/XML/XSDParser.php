@@ -11,6 +11,8 @@
 
 namespace Eulogix\Lib\XML;
 
+use Eulogix\Cool\Lib\Cool;
+
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
  */
@@ -26,7 +28,7 @@ class XSDParser {
         $doc->preserveWhiteSpace = true;
         $doc->load($xsd);
 
-        $temp_xml = tempnam(sys_get_temp_dir(),'XML');
+        $temp_xml = tempnam(Cool::getInstance()->getFactory()->getSettingsManager()->getTempFolder(),'XML');
 
         $doc->save($temp_xml);
 
