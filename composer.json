@@ -18,7 +18,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Eulogix\\Lib\\": "src/Eulogix/Lib/"
+            "Eulogix\\Lib\\": "src/Eulogix/Lib/",
+            "Eulogix\\Lib\\Misc\\Tests\\": "tests/"
         },
         "files": ["src/Eulogix/Lib/functions.php"]
     }
