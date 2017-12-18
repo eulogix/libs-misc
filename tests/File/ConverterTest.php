@@ -10,6 +10,9 @@
 
 namespace Eulogix\Lib\Misc\Tests\File;
 
+use Eulogix\Lib\File\Converter\Html2PdfConverter;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
+
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
  */
@@ -18,6 +21,11 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
 {
     public function testHtml2Pdf()
     {
-        $this->assertTrue(false);
+        $c = new Html2PdfConverter();
+        $c->checkEnvironment();
+
+        $input = SimpleFileProxy::fromFileSystem(__DIR__.'/../res/html/simpledoc.html');
+        $output = $c->convert($input, 'pdf');
+        $this->assertTrue( $output->getSize() > 5000 );
     }
 }

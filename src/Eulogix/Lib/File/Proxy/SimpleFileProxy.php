@@ -20,18 +20,24 @@ class SimpleFileProxy extends BaseFileProxy
 
     protected $contentFile;
 
+    protected $content;
+
     /**
      * @param string $filePath
+     * @param bool $inMemory
      * @return SimpleFileProxy
      * @throws \Exception
      */
-    public static function fromFileSystem($filePath) {
+    public static function fromFileSystem($filePath, $inMemory = false) {
         if(!file_exists($filePath))
             throw new \Exception("file does not exist");
         $pi = mb_pathinfo($filePath);
         $f = new self();
         $f->setName($pi['basename']);
-        $f->setContentFile($filePath);
+        if($inMemory) {
+            $f->setContent(file_get_contents($filePath));
+            $f->setDetailsFromFile($filePath);
+        } else $f->setContentFile($filePath);
         return $f;
     }
 
@@ -77,7 +83,7 @@ class SimpleFileProxy extends BaseFileProxy
     {
         if($this->contentFile)
             copy($this->contentFile, $fileName);
-        else file_put_contents($fileName, null);
+        else file_put_contents($fileName, $this->content);
     }
 
     /**
@@ -87,12 +93,10 @@ class SimpleFileProxy extends BaseFileProxy
      */
     public function setContentFile($contentFile, $sha1Hash = null)
     {
+        $this->content = null;
         $this->contentFile = $contentFile;
-        $this->setSize( filesize($contentFile) );
         $this->setHash( $sha1Hash ?? sha1_file($contentFile) );
-        $this->setCreationDate( \DateTime::createFromFormat('U', filectime($contentFile)) );
-        $this->setLastModificationDate( \DateTime::createFromFormat('U', filemtime($contentFile)) );
-        $this->setIsDirectory(is_dir($contentFile));
+        $this->setDetailsFromFile($contentFile);
         return $this;
     }
 
@@ -102,6 +106,34 @@ class SimpleFileProxy extends BaseFileProxy
      */
     public function getContent()
     {
-        return $this->contentFile ? file_get_contents($this->contentFile) : null;
+        return $this->contentFile ? file_get_contents($this->contentFile) : $this->content;
+    }
+
+    /**
+     * @param mixed $content
+     * @return $this
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+        $this->contentFile = null;
+        $this->setHash(sha1($content));
+        return $this;
+    }
+
+    /**
+     * @param $contentFile
+     */
+    protected function setDetailsFromFile($contentFile)
+    {
+        $this->setSize(filesize($contentFile));
+        $this->setCreationDate(\DateTime::createFromFormat('U', filectime($contentFile)));
+        $this->setLastModificationDate(\DateTime::createFromFormat('U', filemtime($contentFile)));
+        $this->setIsDirectory(is_dir($contentFile));
+    }
+
+    public function clear() {
+        if($this->contentFile)
+            @unlink($this->contentFile);
     }
 }

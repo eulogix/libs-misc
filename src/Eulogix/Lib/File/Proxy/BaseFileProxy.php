@@ -20,7 +20,7 @@ abstract class BaseFileProxy implements FileProxyInterface {
     /**
      * @var string
      */
-    public $name, $basename, $extension, $id, $parentId, $hash;
+    public $name, $basename, $extension, $completeExtension, $id, $parentId, $hash;
 
     /**
      * @var boolean
@@ -73,6 +73,14 @@ abstract class BaseFileProxy implements FileProxyInterface {
     public function getExtension()
     {
         return $this->extension;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompleteExtension()
+    {
+        return $this->completeExtension;
     }
 
     /**
@@ -247,8 +255,9 @@ abstract class BaseFileProxy implements FileProxyInterface {
         $pi = mb_pathinfo($name);
         if(!$this->isDirectory()) {
             $this->extension = @$pi[ 'extension' ];
+            $this->completeExtension = @$pi[ 'complete_extension' ];
         }
-        $this->basename = @$pi[ 'basename' ];
+        $this->basename = @$pi[ 'filename' ];
 
         return $this;
     }

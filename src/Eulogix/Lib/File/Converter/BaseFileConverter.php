@@ -11,6 +11,9 @@
 
 namespace Eulogix\Lib\File\Converter;
 
+use Eulogix\Lib\File\Proxy\FileProxyInterface;
+use Eulogix\Lib\File\Proxy\SimpleFileProxy;
+
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
  */
@@ -18,6 +21,26 @@ namespace Eulogix\Lib\File\Converter;
 abstract class BaseFileConverter implements FileConverterInterface {
 
     protected $supportedConversions = [];
+
+    /**
+     * @inheritdoc
+     */
+    public function convert($input, $formatTo, array $options = [])
+    {
+        $wkInput = $input instanceof FileProxyInterface ? $input : SimpleFileProxy::fromFileSystem($input);
+        if(!$this->supportsConversion($wkInput->getExtension(), $formatTo))
+            throw new \Exception("Conversion not supported from ".$wkInput->getExtension()." to {$formatTo}");
+        return $this->doConvert($input, $formatTo, $options);
+    }
+
+    /**
+     * @param FileProxyInterface|string $input
+     * @param string $formatTo
+     * @param array $options
+     * @return FileProxyInterface
+     * @throws \Exception
+     */
+    protected abstract function doConvert($input, $formatTo, array $options = []);
 
     /**
      * @inheritdoc

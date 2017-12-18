@@ -27,10 +27,19 @@ interface FileConverterInterface {
     public function supportsConversion($formatFrom, $formatTo);
 
     /**
-     * @param FileProxyInterface $input
+     * @param FileProxyInterface|string $input
+     * @param string $formatTo
      * @param array $options
      * @return FileProxyInterface
+     * @throws \Exception
      */
-    public function convert(FileProxyInterface $input, array $options);
+    public function convert($input, $formatTo, array $options = []);
+
+    /**
+     * if the converter needs binaries, extensions or other things,
+     * check it here and throw an exception if requirements are not met
+     * @throws \Exception
+     */
+    public function checkEnvironment();
 
 }

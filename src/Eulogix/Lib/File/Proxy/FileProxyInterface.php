@@ -51,9 +51,16 @@ interface FileProxyInterface
     public function getBaseName();
 
     /**
+     * for files like file.htm.tmp, returns 'tmp'
      * @return string
      */
     public function getExtension();
+
+    /**
+     * for files like file.htm.tmp, returns 'htm.tmp'
+     * @return string
+     */
+    public function getCompleteExtension();
 
     /**
      * @return array
