@@ -97,6 +97,8 @@ class SimpleFileProxy extends BaseFileProxy
         $this->contentFile = $contentFile;
         $this->setHash( $sha1Hash ?? sha1_file($contentFile) );
         $this->setDetailsFromFile($contentFile);
+        $this->setId(fileinode($contentFile));
+        $this->setParentId(fileinode(dirname($contentFile)));
         return $this;
     }
 
