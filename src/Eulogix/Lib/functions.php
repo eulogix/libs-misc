@@ -28,7 +28,7 @@ function mb_pathinfo($filepath) {
         if($m[3]) $ret['filename'] = $m[3];
     }
     preg_match('/^.*?\.(.+?)$/im', $filepath, $m);
-    $ret['complete_extension'] = @$m[1] ?? null;
+    $ret['complete_extension'] = @$m[1] ? @$m[1] : null;
     return $ret;
 }
 
