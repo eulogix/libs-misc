@@ -20,7 +20,7 @@ class MemcachedCacher implements CacherInterface
     /**
      * @var string
      */
-    private $prefix = '';
+    private $server, $port, $prefix = '';
 
     /**
      * @var \Memcached
@@ -41,10 +41,19 @@ class MemcachedCacher implements CacherInterface
      * @param string $prefix
      */
     function __construct($server, $port, $prefix = '') {
+        $this->server = $server;
+        $this->port = $port;
         $this->prefix = $prefix;
+        $this->initMemcached();
+    }
 
+    function __wakeup() {
+        $this->initMemcached();
+    }
+
+    private function initMemcached() {
         $this->memcached = new \Memcached();
-        $this->memcached->addServer($server, $port);
+        $this->memcached->addServer($this->server, $this->port);
     }
 
     /**
