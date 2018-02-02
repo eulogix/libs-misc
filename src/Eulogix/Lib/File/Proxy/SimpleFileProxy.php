@@ -30,7 +30,7 @@ class SimpleFileProxy extends BaseFileProxy
      */
     public static function fromFileSystem($filePath, $inMemory = false) {
         if(!file_exists($filePath))
-            throw new \Exception("file does not exist");
+            throw new \Exception("file $filePath does not exist");
         $pi = mb_pathinfo($filePath);
         $f = new self();
         $f->setName($pi['basename']);
