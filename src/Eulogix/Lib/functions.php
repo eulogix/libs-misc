@@ -252,3 +252,22 @@ function readable_filesize($bytes, $decimals = 2) {
     $factor = floor((strlen($bytes) - 1) / 3);
     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
 }
+
+/**
+ * recursively delete a folder
+ * @param $dir
+ */
+function rrmdir($dir) {
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (is_dir($dir."/".$object))
+                    rrmdir($dir."/".$object);
+                else
+                    unlink($dir."/".$object);
+            }
+        }
+        rmdir($dir);
+    }
+}

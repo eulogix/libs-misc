@@ -68,4 +68,25 @@ class ZipUtils
         shell_exec($cmd);
         @unlink($tempArchive);
     }
+
+    /**
+     * @param FileProxyInterface $archive
+     * @throws \Exception
+     * @return array
+     */
+    public static function getContentList(FileProxyInterface $archive) {
+        $tempArchive = FileUtils::getTempFileName(null, 'zip');
+        $archive->toFile($tempArchive);
+
+        $content = [];
+        if ($zip = zip_open($tempArchive)) {
+            while ($zip_entry = zip_read($zip))
+                $content[] = zip_entry_name($zip_entry);
+            zip_close($zip);
+        }
+
+        @unlink($tempArchive);
+
+        return $content;
+    }
 }
