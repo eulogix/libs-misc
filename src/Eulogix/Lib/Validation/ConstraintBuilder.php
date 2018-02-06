@@ -48,7 +48,7 @@ class ConstraintBuilder {
     public static function Language_() { return array('constraint'=>'Language'); }
     public static function Length_() { return array('constraint'=>'Length'); }
     public static function LessThan_() { return array('constraint'=>'LessThan'); }
-    public static function LessThanOrEqual_() { return array('constraint'=>'LessThanOrEqual'); }
+    public static function LessThanOrEqual_($v, $message=null) { return array('constraint'=>'LessThanOrEqual', 'arg'=>$v, 'message'=>$message); }
     public static function Locale_() { return array('constraint'=>'Locale'); }
     public static function Luhn_() { return array('constraint'=>'Luhn'); }
     public static function NotBlank_($message=null) { return array('constraint'=>'NotBlank', 'message'=>$message); }
