@@ -68,6 +68,12 @@ interface FileProxyInterface
     public function getProperties();
 
     /**
+     * @param array $properties
+     * @return $this
+     */
+    public function setProperties($properties);
+
+    /**
      * @param $propertyName
      * @return mixed
      */
