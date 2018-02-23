@@ -16,7 +16,7 @@
         "symfony/event-dispatcher": "~2.8",
         "yohang/finite": "1.1.*@dev",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
-        "php-mime-mail-parser/php-mime-mail-parser": "~1.2"
+        "php-mime-mail-parser/php-mime-mail-parser": "^2.9"
     },
     "autoload": {
         "psr-4": {

@@ -11,7 +11,9 @@
 
 namespace Eulogix\Lib\Email;
 
+use Eulogix\Lib\Email\Event\EmailProcessedEvent;
 use Eulogix\Lib\Traits\DispatcherHolder;
+use PhpMimeMailParser\Parser;
 
 /**
  * @author Pietro Baricco <pietro@eulogix.com>
@@ -20,6 +22,8 @@ use Eulogix\Lib\Traits\DispatcherHolder;
 class EmailFetcher {
 
     use DispatcherHolder;
+
+    const EVENT_EMAIL_PROCESSED = 'EMAIL_PROCESSED';
 
     /**
      * @var resource
@@ -37,6 +41,15 @@ class EmailFetcher {
         $this->mailbox = imap_open($connectionString, $user, $pass);
         if(!$this->mailbox)
             throw new \Exception(imap_last_error());
+    }
+
+    public function __destruct() {
+        $this->commit();
+        imap_close($this->mailbox);
+    }
+
+    public function commit() {
+        imap_expunge($this->mailbox);
     }
 
     /**
@@ -61,14 +74,23 @@ class EmailFetcher {
 
     /**
      * @param int|null $limit
+     * @return $this;
      */
     public function processMessages($limit = null) {
         $messagesNr = $this->getMessagesNumber();
         $maxMessagesToProcess = min($limit ?? $messagesNr, $messagesNr);
         for ($i = 1; $i <= $maxMessagesToProcess; $i++) {
-            $headers = imap_fetchheader($this->mailbox, $i, FT_PREFETCHTEXT);
-            $body = imap_body($this->mailbox, $i);
-            //TODO
+            $fullEmailSource = imap_fetchbody($this->mailbox, $i, "");
+            $parser = new Parser();
+            $parser->setText($fullEmailSource);
+            $this->getDispatcher()->dispatch( self::EVENT_EMAIL_PROCESSED, new EmailProcessedEvent($this, $parser, $i) );
         }
+        return $this;
     }
+
+    public function removeMessage($messageId)
+    {
+        imap_delete($this->mailbox, $messageId);
+    }
+
 }

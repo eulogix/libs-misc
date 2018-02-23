@@ -35,7 +35,7 @@ class CryptoUtils
      * @param string|null $password
      * @return bool|string
      */
-    function decodeEncryptedString($code, $password = self::DEFAULT_PASSWORD) {
+    public static function decodeEncryptedString($code, $password = self::DEFAULT_PASSWORD) {
         if(!preg_match('%^\[#([a-z0-9+ /=]+)#]$%im', $code, $m))
             return false;
         return openssl_decrypt($m[1], "AES-256-CBC", $password);
@@ -45,7 +45,7 @@ class CryptoUtils
      * @param string $text
      * @return array
      */
-    function decodeAllEncryptedStringsFromText($text) {
+    public static function decodeAllEncryptedStringsFromText($text) {
         $ret = [];
         if(!preg_match_all('%\[#[a-z0-9+ /=]+#]%im', $text, $m, PREG_PATTERN_ORDER))
             return $ret;
@@ -54,5 +54,13 @@ class CryptoUtils
             $ret[ $code ] = self::decodeEncryptedString( $code );
 
         return($ret);
+    }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    public static function removeAllEncryptedStringsFromText($text) {
+        return preg_replace('%\[#[a-z0-9+ /=]+#]%im', '', $text);
     }
 }
