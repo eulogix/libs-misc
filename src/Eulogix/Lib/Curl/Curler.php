@@ -45,6 +45,11 @@ class Curler
     protected $curl;
 
     /**
+     * @var string
+     */
+    protected $httpUser, $httpPassword;
+
+    /**
      * @throws \Exception
      */
     public function __construct()
@@ -208,6 +213,15 @@ class Curler
     }
 
     /**
+     * @param string $user
+     * @param string $password
+     */
+    public function setHttpAuth($user, $password) {
+        $this->httpUser = $user;
+        $this->httpPassword = $password;
+    }
+
+    /**
      * @return resource
      */
     protected function getNewCurl()
@@ -223,6 +237,10 @@ class Curler
         if($this->getSocks5proxy()) {
             curl_setopt($ch, CURLOPT_PROXY, $this->getSocks5proxy());
             curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+        }
+
+        if($this->httpUser && $this->httpPassword) {
+            curl_setopt($ch, CURLOPT_USERPWD, $this->httpUser . ":" . $this->httpPassword);
         }
 
         //curl_setopt ($ch, CURLOPT_ENCODING, 'gzip,deflate');
@@ -265,7 +283,8 @@ class Curler
     /**
      * @param string $url
      * @param string|array $postData
-     * @return bool|\httpMessage
+     * @return bool|\http\Message|\HttpMessage
+     * @throws \Exception
      */
     function fetchPage($url, $postData = null) {
 
@@ -293,10 +312,13 @@ class Curler
 
             if($response !== false) {
                 try {
-                    return new \httpMessage($response);
-                } catch(\HttpEncodingException $e) {
-                    $response = str_replace('Transfer-Encoding: chunked','', $response);
-                    return new \httpMessage($response);
+                    return new \http\Message($response);
+                } catch(\Exception $e) {
+                    if($e instanceof \HttpEncodingException || $e instanceof \http\Exception\BadMessageException) {
+                        $response = preg_replace('/^Transfer-Encoding: chunked[ \r\n]*/sim','', $response);
+                        return new \http\Message($response);
+                    }
+                    throw $e;
                 }
             }
 
