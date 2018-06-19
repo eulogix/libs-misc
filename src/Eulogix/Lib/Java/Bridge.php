@@ -20,14 +20,21 @@ class Bridge {
     /**
      * @var string
      */
-    private $url = "";
+    private $url = "", $dir = "";
 
     /**
      * @param string $url
      */
-    public function __construct($url) {
+    public function __construct($url, $dir) {
         $this->url = $url;
-        require_once("$url/java/Java.inc");
+        $this->dir = $dir;
+
+        $javaInc = $dir.DIRECTORY_SEPARATOR."Java.inc";
+        if(!file_exists($javaInc)) {
+            copy("$url/java/Java.inc", $javaInc);
+        }
+
+        require_once($javaInc);
     }
 
     /**
