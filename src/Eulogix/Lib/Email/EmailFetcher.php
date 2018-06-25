@@ -88,9 +88,17 @@ class EmailFetcher {
         return $this;
     }
 
+    /**
+     * @param $messageId
+     */
     public function removeMessage($messageId)
     {
         imap_delete($this->mailbox, $messageId);
+    }
+
+    public function clearCaches() {
+        imap_gc($this->mailbox, IMAP_GC_ELT);
+        imap_check($this->mailbox);
     }
 
 }
