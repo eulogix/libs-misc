@@ -36,7 +36,7 @@ class PgUtils {
      */
     public static function toPGArray($PHPArray)
     {
-        return '{'.implode($PHPArray,',').'}';
+        return is_array($PHPArray) && count($PHPArray) > 0 ? '{'.implode($PHPArray,',').'}' : null;
     }
 
     /**
