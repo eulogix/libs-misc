@@ -103,6 +103,14 @@ class SimpleFileProxy extends BaseFileProxy
     }
 
     /**
+     * @return mixed
+     */
+    public function getContentFile()
+    {
+        return $this->contentFile;
+    }
+
+    /**
      * gets the whole content as a string
      * @return mixed
      */
