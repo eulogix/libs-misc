@@ -71,6 +71,9 @@ class DumpFixer
             $setSchemaStatement = "SET search_path = {$schema}, pg_catalog;\n\n";
             $moddedDump = preg_replace("/^CREATE (.+?) {$schema}\.(.+?) /im", "{$setSchemaStatement}CREATE $1 $2 ", $moddedDump);
             $moddedDump = preg_replace("/^COMMENT ON COLUMN {$schema}\.([^ \.]+?)\.([^ \.]+?) IS/im", "{$setSchemaStatement}COMMENT ON COLUMN $1.$2 IS", $moddedDump);
+            /* Fix for the postgresql10 dumps */
+            $moddedDump = preg_replace("/_seq\s*AS integer\s*START WITH/","_seq\nSTART WITH",$moddedDump);
+
         }
 
         return $moddedDump;
@@ -80,7 +83,9 @@ class DumpFixer
      * @return bool
      */
     public function mustBeFixed() {
-        return preg_match('/^SET search_path/sim', $this->dumpContent) !== 1;
+        return ((preg_match('/^SET search_path/sim', $this->dumpContent) !== 1) OR
+            (preg_match('/_seq\s*AS integer\s*START WITH/', $this->dumpContent) === 1));
+
     }
     
     protected function getDefinedSchemas() {
