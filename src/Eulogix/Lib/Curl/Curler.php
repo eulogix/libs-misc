@@ -63,7 +63,8 @@ class Curler
             'Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7',
             'Keep-Alive: 300',
             'Connection: keep-alive',
-            'Cache-Control: max-age=0'
+            'Cache-Control: max-age=0',
+            'Expect:'
         ]);
     }
 
