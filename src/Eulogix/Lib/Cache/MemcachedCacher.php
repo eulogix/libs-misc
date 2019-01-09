@@ -60,7 +60,7 @@ class MemcachedCacher implements CacherInterface
      * @inheritdoc
      */
     function tokenize($variable) {
-        return $this->prefix.md5(json_encode($variable));
+        return md5(json_encode($variable));
     }
 
     /**
@@ -68,7 +68,7 @@ class MemcachedCacher implements CacherInterface
      */
     function exists($key) {
         $this->purgeLocalCache();
-        $item = $this->memcached->get($key);
+        $item = $this->memcached->get($this->prefix.$key);
         if( $this->memcached->getResultCode() == \Memcached::RES_SUCCESS) {
             $this->localCache[ $key ] = $item;
             return true;
@@ -80,7 +80,7 @@ class MemcachedCacher implements CacherInterface
      * @inheritdoc
      */
     function store($key, $value, $ttlsecs = 600) {
-        return $this->memcached->set($key, $value, $ttlsecs);
+        return $this->memcached->set($this->prefix.$key, $value, $ttlsecs);
     }
 
     /**
@@ -91,7 +91,7 @@ class MemcachedCacher implements CacherInterface
         if(isset($this->localCache[ $key ]))
             return $this->localCache[ $key ];
 
-        $item = $this->memcached->get($key);
+        $item = $this->memcached->get($this->prefix.$key);
         if( $this->memcached->getResultCode() == \Memcached::RES_SUCCESS) {
             $this->localCache[ $key ] = $item;
             return $item;
@@ -105,7 +105,7 @@ class MemcachedCacher implements CacherInterface
      */
     function delete($key) {
         $this->purgeLocalCache();
-        return $this->memcached->delete($key);
+        return $this->memcached->delete($this->prefix.$key);
     }
 
     /**
